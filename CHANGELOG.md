@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/CloudNationHQ/az-cn-go-markparsr/compare/v1.1.0...v1.2.0) (2025-04-03)
+
+
+### Features
+
+* add provider prefix configuration via options pattern ([#6](https://github.com/CloudNationHQ/az-cn-go-markparsr/issues/6)) ([40453fc](https://github.com/CloudNationHQ/az-cn-go-markparsr/commit/40453fc7841c709f0c913c26d14347e2fcba89d5))
+
 ## [1.1.0](https://github.com/CloudNationHQ/az-cn-go-markparsr/compare/v1.0.0...v1.1.0) (2025-03-22)
 
 
