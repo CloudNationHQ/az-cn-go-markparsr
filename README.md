@@ -20,7 +20,7 @@ func TestReadmeValidationExplicit(t *testing.T) {
 		markparsr.WithRelativeReadmePath("../module/README.md"),
 		markparsr.WithAdditionalSections("Goals", "Testing", "Notes"),
 		markparsr.WithAdditionalFiles("GOALS.md", "TESTING.md"),
-        markparsr.WithProviderPrefixes("azurerm_", "random_", "tls_"),
+		markparsr.WithProviderPrefixes("azurerm_", "random_", "tls_"),
 	)
 
 	if err != nil {
@@ -43,7 +43,7 @@ func TestReadmeValidation(t *testing.T) {
 	validator, err := markparsr.NewReadmeValidator(
 		markparsr.WithAdditionalSections("Goals", "Testing", "Notes"),
 		markparsr.WithAdditionalFiles("GOALS.md", "TESTING.md"),
-        markparsr.WithProviderPrefixes("azurerm_", "random_", "tls_"),
+		markparsr.WithProviderPrefixes("azurerm_", "random_", "tls_"),
 	)
 
 	if err != nil {
