@@ -94,6 +94,14 @@ Markparsr supports a functional options pattern for configuration:
 
 `WithProviderPrefixes(prefixes...):` Specifies custom provider prefixes to recognize
 
+## Contributors
+
+We welcome contributions from the community! Whether it's reporting a bug, suggesting a new feature, or submitting a pull request, your input is highly valued. <br><br>
+
+<a href="https://github.com/cloudnationhq/az-cn-go-markparsr/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=cloudnationhq/az-cn-go-markparsr" />
+</a>
+
 ## Notes
 
 The `README_PATH` environment variable takes highest priority if set.
