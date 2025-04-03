@@ -81,6 +81,19 @@ Required module files are confirmed to exist and contain content.
 
 Urls in the markdown documentation are validated for accessibility.
 
+## Options
+Markparsr supports a functional options pattern for configuration:
+
+`WithFormat(format):` Sets the markdown format explicitly (document, table, or auto)
+
+`WithAdditionalSections(sections...):` Specifies additional sections to validate
+
+`WithAdditionalFiles(files...):` Specifies additional files to validate
+
+`WithRelativeReadmePath(path):` Specifies the path to the README file
+
+`WithProviderPrefixes(prefixes...):` Specifies custom provider prefixes to recognize
+
 ## Notes
 
 The `README_PATH` environment variable takes highest priority if set.

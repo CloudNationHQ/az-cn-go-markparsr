@@ -12,6 +12,7 @@ func TestReadmeValidation(t *testing.T) {
 		markparsr.WithRelativeReadmePath("../module/README.md"),
 		markparsr.WithAdditionalSections("Goals", "Testing", "Notes"),
 		markparsr.WithAdditionalFiles("GOALS.md", "TESTING.md"),
+		markparsr.WithProviderPrefixes("azurerm_", "random_", "tls_"),
 	)
 
 	if err != nil {
