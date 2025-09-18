@@ -5,6 +5,19 @@ import (
 	"strings"
 )
 
+// defaultComparisonValidator implements ComparisonValidator
+type defaultComparisonValidator struct{}
+
+// NewComparisonValidator creates a new comparison validator
+func NewComparisonValidator() ComparisonValidator {
+	return &defaultComparisonValidator{}
+}
+
+// ValidateItems reports case-insensitive mismatches between Terraform and markdown items.
+func (dcv *defaultComparisonValidator) ValidateItems(tfItems, mdItems []string, itemType string) []error {
+	return compareTerraformAndMarkdown(tfItems, mdItems, itemType)
+}
+
 type normalizedItem struct {
 	original string
 	key      string

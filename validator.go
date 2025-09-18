@@ -7,9 +7,6 @@ import (
 	"strings"
 )
 
-type Validator interface {
-	Validate() []error
-}
 
 type Options struct {
 	Format MarkdownFormat

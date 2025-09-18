@@ -11,10 +11,40 @@ import (
 	"github.com/hashicorp/hcl/v2/hclparse"
 )
 
+
+// defaultFileReader implements FileReader using os package
+type defaultFileReader struct{}
+
+func (dfr *defaultFileReader) ReadFile(path string) ([]byte, error) {
+	return os.ReadFile(path)
+}
+
+// pooledHCLParser implements HCLParser using a sync.Pool
+type pooledHCLParser struct {
+	pool *sync.Pool
+}
+
+func newPooledHCLParser() *pooledHCLParser {
+	return &pooledHCLParser{
+		pool: &sync.Pool{
+			New: func() any {
+				return hclparse.NewParser()
+			},
+		},
+	}
+}
+
+func (php *pooledHCLParser) ParseHCL(content []byte, filename string) (*hcl.File, hcl.Diagnostics) {
+	parser := php.pool.Get().(*hclparse.Parser)
+	defer php.pool.Put(parser)
+	return parser.ParseHCL(content, filename)
+}
+
 // TerraformContent extracts Terraform definitions for documentation validation.
 type TerraformContent struct {
 	workspace  string
-	parserPool *sync.Pool
+	fileReader FileReader
+	hclParser  HCLParser
 	fileCache  sync.Map
 }
 
@@ -34,33 +64,45 @@ func NewTerraformContent(modulePath string) (*TerraformContent, error) {
 	}
 
 	return &TerraformContent{
-		workspace: modulePath,
-		parserPool: &sync.Pool{
-			New: func() any {
-				return hclparse.NewParser()
-			},
-		},
+		workspace:  modulePath,
+		fileReader: &defaultFileReader{},
+		hclParser:  newPooledHCLParser(),
 	}, nil
 }
 
-// ExtractItems gets items of a specific block type from a Terraform file.
-func (tc *TerraformContent) ExtractItems(filePath, blockType string) ([]string, error) {
-	content, err := os.ReadFile(filePath)
+// parseFile reads and parses an HCL file, handling common error cases
+func (tc *TerraformContent) parseFile(filePath string) (*hcl.File, error) {
+	content, err := tc.fileReader.ReadFile(filePath)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return []string{}, nil
+			return nil, nil // Return nil file for non-existent files
 		}
 		return nil, fmt.Errorf("error reading file %s: %w", filepath.Base(filePath), err)
 	}
 
-	parser := tc.parserPool.Get().(*hclparse.Parser)
-	defer tc.parserPool.Put(parser)
-
-	file, parseDiags := parser.ParseHCL(content, filePath)
+	file, parseDiags := tc.hclParser.ParseHCL(content, filePath)
 	if parseDiags.HasErrors() {
 		return nil, fmt.Errorf("error parsing HCL in %s: %v", filepath.Base(filePath), parseDiags)
 	}
 
+	return file, nil
+}
+
+// ExtractItems gets items of a specific block type from a Terraform file.
+func (tc *TerraformContent) ExtractItems(filePath, blockType string) ([]string, error) {
+	file, err := tc.parseFile(filePath)
+	if err != nil {
+		return nil, err
+	}
+	if file == nil {
+		return []string{}, nil // File doesn't exist
+	}
+
+	return tc.extractItemsFromFile(file, filePath, blockType)
+}
+
+// extractItemsFromFile extracts items of a specific block type from a parsed HCL file
+func (tc *TerraformContent) extractItemsFromFile(file *hcl.File, filePath, blockType string) ([]string, error) {
 	var items []string
 	body := file.Body
 	hclContent, _, diags := body.PartialContent(&hcl.BodySchema{
@@ -120,21 +162,19 @@ func (tc *TerraformContent) ExtractResourcesAndDataSources() ([]string, []string
 
 // extractFromFilePath gets resources and data sources from a single Terraform file.
 func (tc *TerraformContent) extractFromFilePath(filePath string) ([]string, []string, error) {
-	content, err := os.ReadFile(filePath)
+	file, err := tc.parseFile(filePath)
 	if err != nil {
-		if os.IsNotExist(err) {
-			return []string{}, []string{}, nil
-		}
-		return nil, nil, fmt.Errorf("error reading file %s: %w", filepath.Base(filePath), err)
+		return nil, nil, err
+	}
+	if file == nil {
+		return []string{}, []string{}, nil // File doesn't exist
 	}
 
-	parser := tc.parserPool.Get().(*hclparse.Parser)
-	defer tc.parserPool.Put(parser)
+	return tc.extractResourcesFromFile(file, filePath)
+}
 
-	file, parseDiags := parser.ParseHCL(content, filePath)
-	if parseDiags.HasErrors() {
-		return nil, nil, fmt.Errorf("error parsing HCL in %s: %v", filepath.Base(filePath), parseDiags)
-	}
+// extractResourcesFromFile extracts resources and data sources from a parsed HCL file
+func (tc *TerraformContent) extractResourcesFromFile(file *hcl.File, filePath string) ([]string, []string, error) {
 
 	var resources []string
 	var dataSources []string
