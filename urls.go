@@ -20,8 +20,6 @@ func NewURLValidator(content *MarkdownContent) *URLValidator {
 }
 
 // Validate checks all URLs in the markdown content to ensure they are accessible.
-// Skips Terraform Registry URLs (registry.terraform.io/providers/) and makes
-// concurrent HTTP requests to each URL for better performance.
 func (uv *URLValidator) Validate() []error {
 	rxStrict := xurls.Strict()
 	urls := rxStrict.FindAllString(uv.content.data, -1)

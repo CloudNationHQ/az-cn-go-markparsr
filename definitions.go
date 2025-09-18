@@ -1,14 +1,12 @@
 package markparsr
 
-// TerraformDefinitionValidator ensures that all resources and data sources
-// in Terraform code are documented in markdown, and vice versa.
+// TerraformDefinitionValidator ensures Terraform resources and data sources are documented in markdown.
 type TerraformDefinitionValidator struct {
 	markdown  *MarkdownContent
 	terraform *TerraformContent
 }
 
-// NewTerraformDefinitionValidator creates a validator to compare resources and
-// data sources between Terraform code and markdown documentation.
+// NewTerraformDefinitionValidator creates a validator for Terraform resources and data sources.
 func NewTerraformDefinitionValidator(markdown *MarkdownContent, terraform *TerraformContent) *TerraformDefinitionValidator {
 	return &TerraformDefinitionValidator{
 		markdown:  markdown,
@@ -16,22 +14,21 @@ func NewTerraformDefinitionValidator(markdown *MarkdownContent, terraform *Terra
 	}
 }
 
-// Validate compares resources and data sources between Terraform and markdown.
-// It reports any resources that are in code but not documented, and vice versa.
+// Validate compares Terraform resources and data sources with markdown documentation.
 func (tdv *TerraformDefinitionValidator) Validate() []error {
 	tfResources, tfDataSources, err := tdv.terraform.ExtractResourcesAndDataSources()
 	if err != nil {
 		return []error{err}
 	}
 
-	readmeResources, readmeDataSources, err := tdv.markdown.ExtractResourcesAndDataSources()
-	if err != nil {
-		return []error{err}
+	readmeResources, readmeDataSources, mdErr := tdv.markdown.ExtractResourcesAndDataSources()
+
+	collector := &ErrorCollector{}
+	collector.Add(mdErr)
+	if tdv.markdown.HasSection("Resources") || len(readmeResources) > 0 || len(readmeDataSources) > 0 {
+		collector.AddMany(compareTerraformAndMarkdown(tfResources, readmeResources, "Resources"))
+		collector.AddMany(compareTerraformAndMarkdown(tfDataSources, readmeDataSources, "Data Sources"))
 	}
 
-	var errors []error
-	errors = append(errors, compareTerraformAndMarkdown(tfResources, readmeResources, "Resources")...)
-	errors = append(errors, compareTerraformAndMarkdown(tfDataSources, readmeDataSources, "Data Sources")...)
-
-	return errors
+	return collector.Errors()
 }

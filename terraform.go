@@ -11,25 +11,20 @@ import (
 	"github.com/hashicorp/hcl/v2/hclparse"
 )
 
-// TerraformContent extracts resources, data sources, variables, and outputs
-// from Terraform files for documentation validation.
+// TerraformContent extracts Terraform definitions for documentation validation.
 type TerraformContent struct {
 	workspace  string
 	parserPool *sync.Pool
 	fileCache  sync.Map
 }
 
-// NewTerraformContent creates a new analyzer for Terraform content.
-// It uses the provided module path as the root directory for Terraform files.
-// For CI/CD compatibility, GITHUB_WORKSPACE is used only if modulePath is empty.
+// NewTerraformContent creates a Terraform analyzer rooted at the provided module path.
 func NewTerraformContent(modulePath string) (*TerraformContent, error) {
-	// If no modulePath provided, check for GITHUB_WORKSPACE
 	if modulePath == "" {
 		githubWorkspace := os.Getenv("GITHUB_WORKSPACE")
 		if githubWorkspace != "" {
 			modulePath = githubWorkspace
 		} else {
-			// Last resort - use current directory
 			var err error
 			modulePath, err = os.Getwd()
 			if err != nil {
@@ -92,13 +87,11 @@ func (tc *TerraformContent) ExtractItems(filePath, blockType string) ([]string, 
 	return items, nil
 }
 
-// ExtractResourcesAndDataSources finds all resources and data sources defined in
-// Terraform files, looking directly in the module directory.
+// ExtractResourcesAndDataSources finds resources and data sources in module-level Terraform files.
 func (tc *TerraformContent) ExtractResourcesAndDataSources() ([]string, []string, error) {
 	var resources []string
 	var dataSources []string
 
-	// Scan all .tf files in the directory
 	files, err := os.ReadDir(tc.workspace)
 	if err != nil {
 		if os.IsNotExist(err) {
