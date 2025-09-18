@@ -7,7 +7,6 @@ import (
 
 func TestReadmeValidation(t *testing.T) {
 
-	// Use functional options pattern
 	validator, err := markparsr.NewReadmeValidator(
 		markparsr.WithRelativeReadmePath("../module/README.md"),
 		markparsr.WithAdditionalSections("Goals", "Testing", "Notes"),
