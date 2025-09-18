@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.0](https://github.com/CloudNationHQ/az-cn-go-markparsr/compare/v1.3.0...v1.4.0) (2025-09-18)
+
+
+### Features
+
+* add interfaces and eliminated some duplicate logic ([#11](https://github.com/CloudNationHQ/az-cn-go-markparsr/issues/11)) ([5ddfe82](https://github.com/CloudNationHQ/az-cn-go-markparsr/commit/5ddfe82eff0bb9daca451bed8820ba8d8ffa2134))
+* **deps:** bump github.com/hashicorp/hcl/v2 from 2.23.0 to 2.24.0 ([#10](https://github.com/CloudNationHQ/az-cn-go-markparsr/issues/10)) ([26494ea](https://github.com/CloudNationHQ/az-cn-go-markparsr/commit/26494eaf8afd2d2761d4c4474e0cb01872cfa0fe))
+
 ## [1.3.0](https://github.com/CloudNationHQ/az-cn-go-markparsr/compare/v1.2.0...v1.3.0) (2025-09-18)
 
 
