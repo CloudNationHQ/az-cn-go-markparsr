@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/CloudNationHQ/az-cn-go-markparsr/compare/v1.2.0...v1.3.0) (2025-09-18)
+
+
+### Features
+
+* complete refactor ([#8](https://github.com/CloudNationHQ/az-cn-go-markparsr/issues/8)) ([5579db0](https://github.com/CloudNationHQ/az-cn-go-markparsr/commit/5579db09c4ce9cbb9700e89793479a5fbcbcfff8))
+
 ## [1.2.0](https://github.com/CloudNationHQ/az-cn-go-markparsr/compare/v1.1.0...v1.2.0) (2025-04-03)
 
 
