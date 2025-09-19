@@ -5,10 +5,10 @@ import (
 	"strings"
 )
 
-// defaultComparisonValidator implements ComparisonValidator
+// defaultComparisonValidator compares Terraform state with documentation state.
 type defaultComparisonValidator struct{}
 
-// NewComparisonValidator creates a new comparison validator
+// NewComparisonValidator returns the default ComparisonValidator implementation.
 func NewComparisonValidator() ComparisonValidator {
 	return &defaultComparisonValidator{}
 }

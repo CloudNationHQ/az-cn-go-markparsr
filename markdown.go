@@ -443,7 +443,6 @@ func (mc *MarkdownContent) extractText(node ast.Node) string {
 func (mc *MarkdownContent) hasProviderPrefix(s string) bool {
 	s = strings.ToLower(s)
 
-	// If no provider prefixes are configured, use default behavior
 	if len(mc.providerPrefixes) == 0 {
 		return false
 	}

@@ -14,7 +14,7 @@ Manual auditing is tedious and error-prone.
 
 Validate docs against Terraform source before shipping changes.
 
-Confirm apply/destroy guidance, variables, outputs, and resources are documented.
+Keep documentation aligned with Terraform definitions.
 
 Run lightweight checks in CI/CD for every module.
 

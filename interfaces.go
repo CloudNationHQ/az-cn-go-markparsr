@@ -2,8 +2,6 @@ package markparsr
 
 import "github.com/hashicorp/hcl/v2"
 
-// Core interfaces for the markparsr package
-
 // FileReader interface for file operations
 type FileReader interface {
 	ReadFile(path string) ([]byte, error)

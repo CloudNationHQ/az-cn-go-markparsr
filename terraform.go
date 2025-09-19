@@ -75,7 +75,7 @@ func (tc *TerraformContent) parseFile(filePath string) (*hcl.File, error) {
 	content, err := tc.fileReader.ReadFile(filePath)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return nil, nil // Return nil file for non-existent files
+			return nil, nil
 		}
 		return nil, fmt.Errorf("error reading file %s: %w", filepath.Base(filePath), err)
 	}
@@ -95,7 +95,7 @@ func (tc *TerraformContent) ExtractItems(filePath, blockType string) ([]string, 
 		return nil, err
 	}
 	if file == nil {
-		return []string{}, nil // File doesn't exist
+		return []string{}, nil
 	}
 
 	return tc.extractItemsFromFile(file, filePath, blockType)
@@ -167,7 +167,7 @@ func (tc *TerraformContent) extractFromFilePath(filePath string) ([]string, []st
 		return nil, nil, err
 	}
 	if file == nil {
-		return []string{}, []string{}, nil // File doesn't exist
+		return []string{}, []string{}, nil
 	}
 
 	return tc.extractResourcesFromFile(file, filePath)

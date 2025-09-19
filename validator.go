@@ -7,50 +7,45 @@ import (
 	"strings"
 )
 
-
 type Options struct {
-	Format MarkdownFormat
-
+	Format             MarkdownFormat
 	AdditionalSections []string
-
-	AdditionalFiles []string
-
-	ReadmePath string
-
-	ProviderPrefixes []string
+	AdditionalFiles    []string
+	ReadmePath         string
+	ProviderPrefixes   []string
 }
 
 type Option func(*Options)
 
-// WithFormat sets the markdown format explicitly.
+// WithFormat configures the expected README markdown format.
 func WithFormat(format MarkdownFormat) Option {
 	return func(o *Options) {
 		o.Format = format
 	}
 }
 
-// WithAdditionalSections specifies additional sections to validate.
+// WithAdditionalSections records extra README sections that must exist.
 func WithAdditionalSections(sections ...string) Option {
 	return func(o *Options) {
 		o.AdditionalSections = sections
 	}
 }
 
-// WithAdditionalFiles specifies additional files to validate.
+// WithAdditionalFiles ensures additional module files are present and non-empty.
 func WithAdditionalFiles(files ...string) Option {
 	return func(o *Options) {
 		o.AdditionalFiles = files
 	}
 }
 
-// WithRelativeReadmePath specifies the path to the README file.
+// WithRelativeReadmePath sets the README path relative to the working directory.
 func WithRelativeReadmePath(path string) Option {
 	return func(o *Options) {
 		o.ReadmePath = path
 	}
 }
 
-// WithProviderPrefixes specifies custom provider prefixes to recognize.
+// WithProviderPrefixes registers provider prefixes recognized in documentation links.
 func WithProviderPrefixes(prefixes ...string) Option {
 	return func(o *Options) {
 		o.ProviderPrefixes = prefixes
@@ -68,7 +63,6 @@ type ReadmeValidator struct {
 
 // NewReadmeValidator creates a validator with the given options.
 func NewReadmeValidator(opts ...Option) (*ReadmeValidator, error) {
-	// Initialize with default options
 	options := Options{
 		Format:             FormatDocument,
 		AdditionalSections: []string{},
