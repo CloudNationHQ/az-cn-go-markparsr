@@ -1,9 +1,5 @@
 package markparsr
 
-import (
-	"path/filepath"
-)
-
 type ItemValidator struct {
 	markdown  *MarkdownContent
 	terraform *TerraformContent
@@ -25,8 +21,7 @@ func NewItemValidator(markdown *MarkdownContent, terraform *TerraformContent, it
 }
 
 func (iv *ItemValidator) Validate() []error {
-	filePath := filepath.Join(iv.terraform.workspace, iv.fileName)
-	tfItems, err := iv.terraform.ExtractItems(filePath, iv.blockType)
+	tfItems, err := iv.terraform.ExtractModuleItems(iv.blockType)
 	if err != nil {
 		return []error{err}
 	}

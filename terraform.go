@@ -106,6 +106,41 @@ func (tc *TerraformContent) extractItemsFromFile(file *hcl.File, filePath, block
 	return items, nil
 }
 
+func (tc *TerraformContent) ExtractModuleItems(blockType string) ([]string, error) {
+	files, err := os.ReadDir(tc.workspace)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return []string{}, nil
+		}
+		return nil, fmt.Errorf("error reading directory %s: %w", tc.workspace, err)
+	}
+
+	seen := make(map[string]struct{})
+	var items []string
+
+	for _, file := range files {
+		if file.IsDir() || !strings.HasSuffix(file.Name(), ".tf") {
+			continue
+		}
+
+		filePath := filepath.Join(tc.workspace, file.Name())
+		fileItems, err := tc.ExtractItems(filePath, blockType)
+		if err != nil {
+			return nil, err
+		}
+
+		for _, item := range fileItems {
+			if _, ok := seen[item]; ok {
+				continue
+			}
+			seen[item] = struct{}{}
+			items = append(items, item)
+		}
+	}
+
+	return items, nil
+}
+
 func (tc *TerraformContent) ExtractResourcesAndDataSources() ([]string, []string, error) {
 	var resources []string
 	var dataSources []string
