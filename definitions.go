@@ -21,7 +21,9 @@ func (tdv *TerraformDefinitionValidator) Validate() []error {
 	readmeResources, readmeDataSources, mdErr := tdv.markdown.ExtractResourcesAndDataSources()
 
 	collector := &ErrorCollector{}
-	collector.Add(mdErr)
+	if len(tfResources)+len(tfDataSources) > 0 {
+		collector.Add(mdErr)
+	}
 	if tdv.markdown.HasSection("Resources") || len(readmeResources) > 0 || len(readmeDataSources) > 0 {
 		collector.AddMany(compareTerraformAndMarkdown(tfResources, readmeResources, "Resources"))
 		collector.AddMany(compareTerraformAndMarkdown(tfDataSources, readmeDataSources, "Data Sources"))
