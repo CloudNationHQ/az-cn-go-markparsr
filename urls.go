@@ -22,6 +22,8 @@ func (uv *URLValidator) Validate() []error {
 	rxStrict := xurls.Strict()
 	urls := rxStrict.FindAllString(uv.content.data, -1)
 
+	const maxConcurrency = 5
+	sem := make(chan struct{}, maxConcurrency)
 	var wg sync.WaitGroup
 	errChan := make(chan error, len(urls))
 
@@ -32,6 +34,8 @@ func (uv *URLValidator) Validate() []error {
 		wg.Add(1)
 		go func(url string) {
 			defer wg.Done()
+			sem <- struct{}{}
+			defer func() { <-sem }()
 			if err := validateSingleURL(url); err != nil {
 				errChan <- err
 			}
