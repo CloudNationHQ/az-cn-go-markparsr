@@ -402,7 +402,7 @@ func (mc *MarkdownContent) extractDocumentResourcesAndDataSources() ([]string, [
 		if len(resources) == 0 && len(dataSources) == 0 {
 			return nil, nil, fmt.Errorf("resources section not found or empty")
 		}
-		return resources, dataSources, fmt.Errorf("resources section not found or empty")
+		return resources, dataSources, nil
 	}
 
 	for _, heading := range headings {
