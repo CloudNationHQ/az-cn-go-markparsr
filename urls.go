@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strings"
 	"sync"
+	"time"
 
 	"mvdan.cc/xurls/v2"
 )
@@ -53,7 +54,10 @@ func (uv *URLValidator) Validate() []error {
 
 // validateSingleURL checks if a URL is accessible and returns a 200 OK status.
 func validateSingleURL(url string) error {
-	resp, err := http.Get(url)
+	client := &http.Client{
+		Timeout: 10 * time.Second,
+	}
+	resp, err := client.Get(url)
 	if err != nil {
 		return fmt.Errorf("error accessing URL: %s: %w", url, err)
 	}
