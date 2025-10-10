@@ -5,12 +5,10 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"sync"
 
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/hclparse"
 )
-
 
 // defaultFileReader implements FileReader using os package
 type defaultFileReader struct{}
@@ -19,24 +17,11 @@ func (dfr *defaultFileReader) ReadFile(path string) ([]byte, error) {
 	return os.ReadFile(path)
 }
 
-// pooledHCLParser implements HCLParser using a sync.Pool
-type pooledHCLParser struct {
-	pool *sync.Pool
-}
+// defaultHCLParser implements HCLParser by creating a new parser for each parse operation
+type defaultHCLParser struct{}
 
-func newPooledHCLParser() *pooledHCLParser {
-	return &pooledHCLParser{
-		pool: &sync.Pool{
-			New: func() any {
-				return hclparse.NewParser()
-			},
-		},
-	}
-}
-
-func (php *pooledHCLParser) ParseHCL(content []byte, filename string) (*hcl.File, hcl.Diagnostics) {
-	parser := php.pool.Get().(*hclparse.Parser)
-	defer php.pool.Put(parser)
+func (dhp *defaultHCLParser) ParseHCL(content []byte, filename string) (*hcl.File, hcl.Diagnostics) {
+	parser := hclparse.NewParser()
 	return parser.ParseHCL(content, filename)
 }
 
@@ -45,7 +30,6 @@ type TerraformContent struct {
 	workspace  string
 	fileReader FileReader
 	hclParser  HCLParser
-	fileCache  sync.Map
 }
 
 // NewTerraformContent creates a Terraform analyzer rooted at the provided module path.
@@ -66,7 +50,7 @@ func NewTerraformContent(modulePath string) (*TerraformContent, error) {
 	return &TerraformContent{
 		workspace:  modulePath,
 		fileReader: &defaultFileReader{},
-		hclParser:  newPooledHCLParser(),
+		hclParser:  &defaultHCLParser{},
 	}, nil
 }
 
