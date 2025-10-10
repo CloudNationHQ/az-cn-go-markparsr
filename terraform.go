@@ -10,14 +10,12 @@ import (
 	"github.com/hashicorp/hcl/v2/hclparse"
 )
 
-// defaultFileReader implements FileReader using os package
 type defaultFileReader struct{}
 
 func (dfr *defaultFileReader) ReadFile(path string) ([]byte, error) {
 	return os.ReadFile(path)
 }
 
-// defaultHCLParser implements HCLParser by creating a new parser for each parse operation
 type defaultHCLParser struct{}
 
 func (dhp *defaultHCLParser) ParseHCL(content []byte, filename string) (*hcl.File, hcl.Diagnostics) {
@@ -25,14 +23,12 @@ func (dhp *defaultHCLParser) ParseHCL(content []byte, filename string) (*hcl.Fil
 	return parser.ParseHCL(content, filename)
 }
 
-// TerraformContent extracts Terraform definitions for documentation validation.
 type TerraformContent struct {
 	workspace  string
 	fileReader FileReader
 	hclParser  HCLParser
 }
 
-// NewTerraformContent creates a Terraform analyzer rooted at the provided module path.
 func NewTerraformContent(modulePath string) (*TerraformContent, error) {
 	if modulePath == "" {
 		githubWorkspace := os.Getenv("GITHUB_WORKSPACE")
@@ -54,7 +50,6 @@ func NewTerraformContent(modulePath string) (*TerraformContent, error) {
 	}, nil
 }
 
-// parseFile reads and parses an HCL file, handling common error cases
 func (tc *TerraformContent) parseFile(filePath string) (*hcl.File, error) {
 	content, err := tc.fileReader.ReadFile(filePath)
 	if err != nil {
@@ -72,7 +67,6 @@ func (tc *TerraformContent) parseFile(filePath string) (*hcl.File, error) {
 	return file, nil
 }
 
-// ExtractItems gets items of a specific block type from a Terraform file.
 func (tc *TerraformContent) ExtractItems(filePath, blockType string) ([]string, error) {
 	file, err := tc.parseFile(filePath)
 	if err != nil {
@@ -85,7 +79,6 @@ func (tc *TerraformContent) ExtractItems(filePath, blockType string) ([]string, 
 	return tc.extractItemsFromFile(file, filePath, blockType)
 }
 
-// extractItemsFromFile extracts items of a specific block type from a parsed HCL file
 func (tc *TerraformContent) extractItemsFromFile(file *hcl.File, filePath, blockType string) ([]string, error) {
 	var items []string
 	body := file.Body
@@ -113,7 +106,6 @@ func (tc *TerraformContent) extractItemsFromFile(file *hcl.File, filePath, block
 	return items, nil
 }
 
-// ExtractResourcesAndDataSources finds resources and data sources in module-level Terraform files.
 func (tc *TerraformContent) ExtractResourcesAndDataSources() ([]string, []string, error) {
 	var resources []string
 	var dataSources []string
@@ -144,7 +136,6 @@ func (tc *TerraformContent) ExtractResourcesAndDataSources() ([]string, []string
 	return resources, dataSources, nil
 }
 
-// extractFromFilePath gets resources and data sources from a single Terraform file.
 func (tc *TerraformContent) extractFromFilePath(filePath string) ([]string, []string, error) {
 	file, err := tc.parseFile(filePath)
 	if err != nil {
@@ -157,9 +148,7 @@ func (tc *TerraformContent) extractFromFilePath(filePath string) ([]string, []st
 	return tc.extractResourcesFromFile(file, filePath)
 }
 
-// extractResourcesFromFile extracts resources and data sources from a parsed HCL file
 func (tc *TerraformContent) extractResourcesFromFile(file *hcl.File, filePath string) ([]string, []string, error) {
-
 	var resources []string
 	var dataSources []string
 	body := file.Body

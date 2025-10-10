@@ -17,35 +17,30 @@ type Options struct {
 
 type Option func(*Options)
 
-// WithFormat configures the expected README markdown format.
 func WithFormat(format MarkdownFormat) Option {
 	return func(o *Options) {
 		o.Format = format
 	}
 }
 
-// WithAdditionalSections records extra README sections that must exist.
 func WithAdditionalSections(sections ...string) Option {
 	return func(o *Options) {
 		o.AdditionalSections = sections
 	}
 }
 
-// WithAdditionalFiles ensures additional module files are present and non-empty.
 func WithAdditionalFiles(files ...string) Option {
 	return func(o *Options) {
 		o.AdditionalFiles = files
 	}
 }
 
-// WithRelativeReadmePath sets the README path relative to the working directory.
 func WithRelativeReadmePath(path string) Option {
 	return func(o *Options) {
 		o.ReadmePath = path
 	}
 }
 
-// WithProviderPrefixes registers provider prefixes recognized in documentation links.
 func WithProviderPrefixes(prefixes ...string) Option {
 	return func(o *Options) {
 		o.ProviderPrefixes = prefixes
@@ -61,7 +56,6 @@ type ReadmeValidator struct {
 	options    Options
 }
 
-// NewReadmeValidator creates a validator with the given options.
 func NewReadmeValidator(opts ...Option) (*ReadmeValidator, error) {
 	options := Options{
 		Format:             FormatDocument,
@@ -151,7 +145,6 @@ func buildDefaultValidators(readmePath, modulePath string, markdown *MarkdownCon
 	}
 }
 
-// Validate runs all validators and collects their errors.
 func (rv *ReadmeValidator) Validate() []error {
 	collector := &ErrorCollector{}
 
@@ -162,7 +155,6 @@ func (rv *ReadmeValidator) Validate() []error {
 	return collector.Errors()
 }
 
-// GetFormat returns the detected markdown format.
 func (rv *ReadmeValidator) GetFormat() MarkdownFormat {
 	if rv.markdown != nil {
 		return rv.markdown.format

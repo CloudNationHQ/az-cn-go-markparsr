@@ -5,15 +5,12 @@ import (
 	"strings"
 )
 
-// defaultComparisonValidator compares Terraform state with documentation state.
 type defaultComparisonValidator struct{}
 
-// NewComparisonValidator returns the default ComparisonValidator implementation.
 func NewComparisonValidator() ComparisonValidator {
 	return &defaultComparisonValidator{}
 }
 
-// ValidateItems reports case-insensitive mismatches between Terraform and markdown items.
 func (dcv *defaultComparisonValidator) ValidateItems(tfItems, mdItems []string, itemType string) []error {
 	return compareTerraformAndMarkdown(tfItems, mdItems, itemType)
 }
@@ -99,7 +96,6 @@ func (idx itemIndex) hasMatch(target normalizedItem) bool {
 	return false
 }
 
-// compareTerraformAndMarkdown reports case-insensitive mismatches between Terraform and markdown items.
 func compareTerraformAndMarkdown(tfItems, mdItems []string, itemType string) []error {
 	tfIndex := buildItemIndex(tfItems)
 	mdIndex := buildItemIndex(mdItems)

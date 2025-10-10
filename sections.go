@@ -6,14 +6,12 @@ import (
 	"strings"
 )
 
-// SectionValidator checks for required sections in Terraform module documentation.
 type SectionValidator struct {
 	content            *MarkdownContent
 	requiredSections   []string
 	additionalSections []string
 }
 
-// NewSectionValidator creates a validator for required and custom sections.
 func NewSectionValidator(content *MarkdownContent, additionalSections []string) *SectionValidator {
 	requiredSections := []string{
 		"Resources", "Providers", "Requirements",
@@ -28,7 +26,6 @@ func NewSectionValidator(content *MarkdownContent, additionalSections []string) 
 	}
 }
 
-// Validate checks that all required and additional sections are present and spelled correctly
 func (sv *SectionValidator) Validate() []error {
 	var allErrors []error
 	foundSections := sv.content.GetAllSections()
@@ -88,7 +85,6 @@ func (sv *SectionValidator) Validate() []error {
 	return allErrors
 }
 
-// isSimilarSection checks if a found section name is likely a typo of an expected section
 func isSimilarSection(found, expected string) bool {
 	if found == expected {
 		return true
