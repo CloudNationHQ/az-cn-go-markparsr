@@ -40,7 +40,7 @@ func (iv *ItemValidator) Validate() []error {
 		mdItems = append(mdItems, iv.markdown.ExtractSectionItems(section)...)
 	}
 
-	if !sectionPresent && len(mdItems) == 0 {
+	if !sectionPresent && len(mdItems) == 0 && len(tfItems) == 0 {
 		return nil
 	}
 
