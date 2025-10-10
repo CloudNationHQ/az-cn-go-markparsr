@@ -4,7 +4,6 @@ import (
 	"path/filepath"
 )
 
-// ItemValidator ensures Terraform items such as variables and outputs are documented.
 type ItemValidator struct {
 	markdown  *MarkdownContent
 	terraform *TerraformContent
@@ -14,7 +13,6 @@ type ItemValidator struct {
 	fileName  string
 }
 
-// NewItemValidator links Terraform blocks to their expected markdown sections.
 func NewItemValidator(markdown *MarkdownContent, terraform *TerraformContent, itemType, blockType string, sections []string, fileName string) *ItemValidator {
 	return &ItemValidator{
 		markdown:  markdown,
@@ -26,7 +24,6 @@ func NewItemValidator(markdown *MarkdownContent, terraform *TerraformContent, it
 	}
 }
 
-// Validate reports mismatches between Terraform items and markdown sections.
 func (iv *ItemValidator) Validate() []error {
 	filePath := filepath.Join(iv.terraform.workspace, iv.fileName)
 	tfItems, err := iv.terraform.ExtractItems(filePath, iv.blockType)

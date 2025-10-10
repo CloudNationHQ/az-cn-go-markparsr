@@ -6,14 +6,12 @@ import (
 	"path/filepath"
 )
 
-// FileValidator checks that required files for a Terraform module exist and aren't empty.
 type FileValidator struct {
 	rootDir         string
 	requiredFiles   []string
 	additionalFiles []string
 }
 
-// NewFileValidator creates a validator that checks for certain files in module directory.
 func NewFileValidator(readmePath string, modulePath string, additionalFiles []string) *FileValidator {
 	requiredFiles := []string{
 		readmePath,
@@ -38,7 +36,6 @@ func NewFileValidator(readmePath string, modulePath string, additionalFiles []st
 	}
 }
 
-// Validate checks that all required and additional files exist and are not empty.
 func (fv *FileValidator) Validate() []error {
 	var allErrors []error
 
@@ -57,7 +54,6 @@ func (fv *FileValidator) Validate() []error {
 	return allErrors
 }
 
-// validateFile checks if a file exists and is not empty.
 func validateFile(filePath string) error {
 	fileInfo, err := os.Stat(filePath)
 	if err != nil {

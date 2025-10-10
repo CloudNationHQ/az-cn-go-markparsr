@@ -24,7 +24,6 @@ var (
 	outputAnchorRe = regexp.MustCompile(`(?i)<a\s+name="output_([^"\s]+)"`)
 )
 
-// MarkdownContent parses and analyzes Terraform module documentation
 type MarkdownContent struct {
 	data             string
 	rootNode         ast.Node
@@ -38,7 +37,6 @@ type MarkdownContent struct {
 	anchorTypes      map[string]map[string]bool
 }
 
-// NewMarkdownContent creates a new analyzer for markdown content
 func NewMarkdownContent(data string, format MarkdownFormat, providerPrefixes []string) *MarkdownContent {
 	extensions := parser.CommonExtensions | parser.AutoHeadingIDs
 	p := parser.NewWithExtensions(extensions)
@@ -116,7 +114,6 @@ func (mc *MarkdownContent) indexAnchors() {
 	}
 }
 
-// GetContent returns the full markdown content
 func (mc *MarkdownContent) GetContent() string {
 	return mc.data
 }
@@ -131,12 +128,10 @@ func (mc *MarkdownContent) HasSection(sectionName string) bool {
 	return found
 }
 
-// GetAllSections returns a list of all H2 section names in the markdown
 func (mc *MarkdownContent) GetAllSections() []string {
 	return append([]string(nil), mc.sectionNames...)
 }
 
-// ExtractSectionItems extracts item names from a section using document-style headings
 func (mc *MarkdownContent) ExtractSectionItems(sectionNames ...string) []string {
 	return mc.extractDocumentSectionItems(sectionNames...)
 }
@@ -183,7 +178,6 @@ func (mc *MarkdownContent) collectSectionHeadings(sectionNames []string) []*ast.
 	return headings
 }
 
-// extractDocumentSectionItems extracts item names from level 3 headings within specified sections
 func (mc *MarkdownContent) extractDocumentSectionItems(sectionNames ...string) []string {
 	headings := mc.collectSectionHeadings(sectionNames)
 	if len(headings) == 0 {
@@ -386,12 +380,10 @@ func (mc *MarkdownContent) appendResourceFromLink(link *ast.Link, resources, dat
 	}
 }
 
-// ExtractResourcesAndDataSources finds Terraform resources and data sources in the markdown
 func (mc *MarkdownContent) ExtractResourcesAndDataSources() ([]string, []string, error) {
 	return mc.extractDocumentResourcesAndDataSources()
 }
 
-// extractDocumentResourcesAndDataSources finds resources in document style markdown
 func (mc *MarkdownContent) extractDocumentResourcesAndDataSources() ([]string, []string, error) {
 	headings := mc.collectSectionHeadings([]string{"Resources"})
 	var resources []string
@@ -418,7 +410,6 @@ func (mc *MarkdownContent) extractDocumentResourcesAndDataSources() ([]string, [
 	return resources, dataSources, nil
 }
 
-// extractText gets the text content from a node, using a string pool for efficiency
 func (mc *MarkdownContent) extractText(node ast.Node) string {
 	sb := mc.stringPool.Get().(*strings.Builder)
 	sb.Reset()
@@ -439,7 +430,6 @@ func (mc *MarkdownContent) extractText(node ast.Node) string {
 	return sb.String()
 }
 
-// hasProviderPrefix checks if a string has a recognized provider prefix
 func (mc *MarkdownContent) hasProviderPrefix(s string) bool {
 	s = strings.ToLower(s)
 
@@ -455,7 +445,6 @@ func (mc *MarkdownContent) hasProviderPrefix(s string) bool {
 	return false
 }
 
-// getNextSibling returns the next sibling of a node.
 func getNextSibling(node ast.Node) ast.Node {
 	parent := node.GetParent()
 	if parent == nil {
@@ -470,7 +459,6 @@ func getNextSibling(node ast.Node) ast.Node {
 	return nil
 }
 
-// addUnique adds a string to a slice if it's not already present
 func addUnique(slice *[]string, item string) {
 	if !slices.Contains(*slice, item) {
 		*slice = append(*slice, item)

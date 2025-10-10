@@ -1,24 +1,19 @@
 package markparsr
 
-// defaultStringUtils provides the package-default StringUtils implementation.
 type defaultStringUtils struct{}
 
-// NewStringUtils returns the default StringUtils implementation.
 func NewStringUtils() StringUtils {
 	return &defaultStringUtils{}
 }
 
-// LevenshteinDistance calculates the edit distance between two strings
 func (dsu *defaultStringUtils) LevenshteinDistance(s1, s2 string) int {
 	return levenshtein(s1, s2)
 }
 
-// IsSimilarSection checks if a found section name is likely a typo of an expected section
 func (dsu *defaultStringUtils) IsSimilarSection(found, expected string) bool {
 	return isSimilarSection(found, expected)
 }
 
-// levenshtein calculates the edit distance between two strings
 func levenshtein(s1, s2 string) int {
 	if len(s1) == 0 {
 		return len(s2)
@@ -48,7 +43,6 @@ func levenshtein(s1, s2 string) int {
 	return v1[len(s2)]
 }
 
-// min returns the minimum of three integers
 func min(a, b, c int) int {
 	if a < b {
 		if a < c {

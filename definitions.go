@@ -1,12 +1,10 @@
 package markparsr
 
-// TerraformDefinitionValidator ensures Terraform resources and data sources are documented in markdown.
 type TerraformDefinitionValidator struct {
 	markdown  *MarkdownContent
 	terraform *TerraformContent
 }
 
-// NewTerraformDefinitionValidator creates a validator for Terraform resources and data sources.
 func NewTerraformDefinitionValidator(markdown *MarkdownContent, terraform *TerraformContent) *TerraformDefinitionValidator {
 	return &TerraformDefinitionValidator{
 		markdown:  markdown,
@@ -14,7 +12,6 @@ func NewTerraformDefinitionValidator(markdown *MarkdownContent, terraform *Terra
 	}
 }
 
-// Validate compares Terraform resources and data sources with markdown documentation.
 func (tdv *TerraformDefinitionValidator) Validate() []error {
 	tfResources, tfDataSources, err := tdv.terraform.ExtractResourcesAndDataSources()
 	if err != nil {
