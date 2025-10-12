@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.4.1](https://github.com/CloudNationHQ/az-cn-go-markparsr/compare/v1.4.0...v1.4.1) (2025-10-10)
+
+
+### Bug Fixes
+
+* add http timeout to url validator to prevent hanging ([#13](https://github.com/CloudNationHQ/az-cn-go-markparsr/issues/13)) ([c234588](https://github.com/CloudNationHQ/az-cn-go-markparsr/commit/c234588b30a7620ec9db58145639e5326c8ed69c))
+* cleanup dead code ([#17](https://github.com/CloudNationHQ/az-cn-go-markparsr/issues/17)) ([5e08862](https://github.com/CloudNationHQ/az-cn-go-markparsr/commit/5e0886203cc8e2fa11b232bff0d5883b2f248239))
+* cleanup unneeded comments ([#18](https://github.com/CloudNationHQ/az-cn-go-markparsr/issues/18)) ([ec96d3b](https://github.com/CloudNationHQ/az-cn-go-markparsr/commit/ec96d3b85591db16d13751fe51b3f439c2a81c3d))
+* correct error handling in resource extraction fallback ([#16](https://github.com/CloudNationHQ/az-cn-go-markparsr/issues/16)) ([ce2cdda](https://github.com/CloudNationHQ/az-cn-go-markparsr/commit/ce2cdda4bfa1c20885a6063a1e0d4deff5e620fd))
+* ignore missing resources section when module has none ([#21](https://github.com/CloudNationHQ/az-cn-go-markparsr/issues/21)) ([7cc5dfd](https://github.com/CloudNationHQ/az-cn-go-markparsr/commit/7cc5dfd62a380526909d4c419128f0a2dae61a16))
+* include all terraform files when extracting items ([#20](https://github.com/CloudNationHQ/az-cn-go-markparsr/issues/20)) ([6857331](https://github.com/CloudNationHQ/az-cn-go-markparsr/commit/685733196a23e6bf6ab23036303f67f72475921e))
+* keep checking terraform items when sections missing ([#19](https://github.com/CloudNationHQ/az-cn-go-markparsr/issues/19)) ([e43c91b](https://github.com/CloudNationHQ/az-cn-go-markparsr/commit/e43c91bbe03ee6988821997b6c5b4e9be7c8da76))
+* limit concurrent url checks in validator ([#22](https://github.com/CloudNationHQ/az-cn-go-markparsr/issues/22)) ([bfc2b34](https://github.com/CloudNationHQ/az-cn-go-markparsr/commit/bfc2b347a9785ce7457f971ebe5f78de4e61c950))
+* remove hcl parser poolinh to prevent state pollution ([#15](https://github.com/CloudNationHQ/az-cn-go-markparsr/issues/15)) ([c6b9377](https://github.com/CloudNationHQ/az-cn-go-markparsr/commit/c6b937775cafae643ef278e96a3032722116c4c8))
+
 ## [1.4.0](https://github.com/CloudNationHQ/az-cn-go-markparsr/compare/v1.3.0...v1.4.0) (2025-09-18)
 
 
