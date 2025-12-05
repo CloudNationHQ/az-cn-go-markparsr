@@ -123,7 +123,7 @@ func (mc *MarkdownContent) HasSection(sectionName string) bool {
 		return found
 	}
 
-	found := len(mc.matchSectionHeadings(sectionName)) > 0
+	found := len(mc.matchExactSectionHeadings(sectionName)) > 0
 	mc.sections[sectionName] = found
 	return found
 }
@@ -134,6 +134,23 @@ func (mc *MarkdownContent) GetAllSections() []string {
 
 func (mc *MarkdownContent) ExtractSectionItems(sectionNames ...string) []string {
 	return mc.extractDocumentSectionItems(sectionNames...)
+}
+
+func (mc *MarkdownContent) matchExactSectionHeadings(sectionName string) []*ast.Heading {
+	trimmed := strings.TrimSpace(sectionName)
+	if trimmed == "" {
+		return nil
+	}
+
+	var matches []*ast.Heading
+	for _, heading := range mc.h2Headings {
+		text := strings.TrimSpace(mc.extractText(heading))
+		if text == trimmed {
+			matches = append(matches, heading)
+		}
+	}
+
+	return matches
 }
 
 func (mc *MarkdownContent) matchSectionHeadings(sectionName string) []*ast.Heading {

@@ -10,6 +10,10 @@ import (
 	"mvdan.cc/xurls/v2"
 )
 
+var httpClient = &http.Client{
+	Timeout: 10 * time.Second,
+}
+
 type URLValidator struct {
 	content *MarkdownContent
 }
@@ -54,10 +58,7 @@ func (uv *URLValidator) Validate() []error {
 }
 
 func validateSingleURL(url string) error {
-	client := &http.Client{
-		Timeout: 10 * time.Second,
-	}
-	resp, err := client.Get(url)
+	resp, err := httpClient.Get(url)
 	if err != nil {
 		return fmt.Errorf("error accessing URL: %s: %w", url, err)
 	}

@@ -27,6 +27,7 @@ type TerraformContent struct {
 	workspace  string
 	fileReader FileReader
 	hclParser  HCLParser
+	readDir    func(string) ([]os.DirEntry, error)
 }
 
 func NewTerraformContent(modulePath string) (*TerraformContent, error) {
@@ -47,6 +48,7 @@ func NewTerraformContent(modulePath string) (*TerraformContent, error) {
 		workspace:  modulePath,
 		fileReader: &defaultFileReader{},
 		hclParser:  &defaultHCLParser{},
+		readDir:    os.ReadDir,
 	}, nil
 }
 
@@ -107,7 +109,7 @@ func (tc *TerraformContent) extractItemsFromFile(file *hcl.File, filePath, block
 }
 
 func (tc *TerraformContent) ExtractModuleItems(blockType string) ([]string, error) {
-	files, err := os.ReadDir(tc.workspace)
+	files, err := tc.readDir(tc.workspace)
 	if err != nil {
 		if os.IsNotExist(err) {
 			return []string{}, nil
@@ -145,7 +147,7 @@ func (tc *TerraformContent) ExtractResourcesAndDataSources() ([]string, []string
 	var resources []string
 	var dataSources []string
 
-	files, err := os.ReadDir(tc.workspace)
+	files, err := tc.readDir(tc.workspace)
 	if err != nil {
 		if os.IsNotExist(err) {
 			return resources, dataSources, nil

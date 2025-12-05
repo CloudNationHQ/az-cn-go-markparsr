@@ -22,12 +22,15 @@ func (tdv *TerraformDefinitionValidator) Validate() []error {
 
 	collector := &ErrorCollector{}
 	if len(tfResources)+len(tfDataSources) > 0 {
-		collector.Add(mdErr)
+		if mdErr != nil {
+			collector.Add(mdErr)
+			return collector.Errors()
+		}
 	}
+
 	if tdv.markdown.HasSection("Resources") || len(readmeResources) > 0 || len(readmeDataSources) > 0 {
 		collector.AddMany(compareTerraformAndMarkdown(tfResources, readmeResources, "Resources"))
 		collector.AddMany(compareTerraformAndMarkdown(tfDataSources, readmeDataSources, "Data Sources"))
 	}
-
 	return collector.Errors()
 }
