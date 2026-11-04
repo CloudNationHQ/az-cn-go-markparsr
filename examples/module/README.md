@@ -202,4 +202,4 @@ A naming convention is developed using regular expressions to ensure correct abb
 
 Full usage examples and integrations with dependency modules are in the examples directory.
 
-To update the module's documentation run `make doc`
+To update the module's documentation run `make docs`
